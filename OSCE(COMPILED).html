@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>OSCE Normal Findings & Verbalization Guide</title>
+  <style>
+    :root {
+      --bg: #fdf2f8;
+      --card-bg: #ffffff;
+      --primary: #ec4899;
+      --primary-light: #fce7f3;
+      --primary-dark: #be185d;
+      --text-main: #374151;
+      --text-muted: #6b7280;
+      --border: #fbcfe8;
+      --script-bg: #fff1f2;
+      --script-border: #fda4af;
+      --findings-bg: #f5f3ff;
+      --steps-bg: #fdf2f8;
+      --shadow: 0 4px 12px rgba(236, 72, 153, 0.08);
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+      background: var(--bg);
+      color: var(--text-main);
+      line-height: 1.65;
+      padding: 20px;
+    }
+    header {
+      text-align: center;
+      margin-bottom: 24px;
+      padding: 24px;
+      background: linear-gradient(135deg, #f472b6, #db2777);
+      color: white;
+      border-radius: 16px;
+      box-shadow: var(--shadow);
+    }
+    header h1 { font-size: 1.8rem; margin-bottom: 6px; letter-spacing: 0.5px; }
+    header p { opacity: 0.95; font-size: 0.95rem; }
+
+    /* Filter Controls */
+    #filter-container {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      justify-content: center;
+      margin-bottom: 24px;
+      position: sticky;
+      top: 16px;
+      z-index: 10;
+      background: rgba(253, 242, 248, 0.95);
+      padding: 12px;
+      border-radius: 12px;
+      backdrop-filter: blur(8px);
+      border: 1px solid var(--border);
+    }
+    .filter-btn {
+      padding: 8px 18px;
+      border: 1.5px solid var(--border);
+      background: white;
+      border-radius: 24px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 0.9rem;
+      transition: all 0.2s ease;
+      color: var(--text-muted);
+    }
+    .filter-btn:hover, .filter-btn.active {
+      background: var(--primary);
+      color: white;
+      border-color: var(--primary);
+      box-shadow: 0 3px 8px rgba(236, 72, 153, 0.25);
+      transform: translateY(-1px);
+    }
+
+    /* System Sections */
+    .system-section {
+      background: var(--card-bg);
+      border-radius: 16px;
+      padding: 24px;
+      margin-bottom: 24px;
+      box-shadow: var(--shadow);
+      border-top: 4px solid var(--primary);
+      transition: all 0.3s ease;
+    }
+    .system-section.hidden { display: none; }
+    .system-section h2 {
+      color: var(--primary-dark);
+      margin-bottom: 18px;
+      padding-bottom: 10px;
+      border-bottom: 2px dashed var(--border);
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      font-size: 1.4rem;
+    }
+    .system-section h2 span { font-size: 1.3rem; }
+    
+    .sub-heading {
+      font-size: 1.05rem;
+      color: var(--primary-dark);
+      margin: 20px 0 12px 0;
+      padding-left: 12px;
+      border-left: 4px solid var(--primary);
+      font-weight: 700;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+    .sub-heading.script { color: #059669; border-left-color: #10b981; }
+    .sub-heading.findings { color: #2563eb; border-left-color: #3b82f6; }
+    .sub-heading.steps { color: #7c3aed; border-left-color: #8b5cf6; }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 10px 0 18px 0;
+      background: white;
+      border-radius: 10px;
+      overflow: hidden;
+      border: 1px solid var(--border);
+    }
+    th, td {
+      padding: 12px 14px;
+      text-align: left;
+      border-bottom: 1px solid var(--border);
+      font-size: 0.92rem;
+    }
+    th {
+      background: var(--primary-light);
+      color: var(--primary-dark);
+      font-weight: 600;
+    }
+    tr:last-child td { border-bottom: none; }
+    tr:hover { background: #faf5f7; }
+
+    .verbal-block {
+      background: var(--script-bg);
+      border: 1px solid var(--script-border);
+      border-radius: 10px;
+      padding: 16px;
+      margin: 10px 0 18px 0;
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      white-space: pre-wrap;
+      line-height: 1.6;
+      font-size: 0.88rem;
+      color: #4a1d5e;
+    }
+    .steps-list {
+      background: var(--steps-bg);
+      border: 1px solid var(--border);
+      border-radius: 10px;
+      padding: 16px 20px;
+      margin: 10px 0 18px 0;
+      list-style: none;
+    }
+    .steps-list li {
+      margin: 6px 0;
+      padding-left: 20px;
+      position: relative;
+      font-size: 0.9rem;
+    }
+    .steps-list li::before {
+      content: "▸";
+      position: absolute;
+      left: 0;
+      color: var(--primary);
+      font-weight: bold;
+    }
+    .pro-tip {
+      background: #fef3c7;
+      border-left: 4px solid #d97706;
+      padding: 14px;
+      margin: 18px 0;
+      border-radius: 0 10px 10px 0;
+      font-size: 0.9rem;
+      color: #92400e;
+    }
+
+    @media (max-width: 768px) {
+      body { padding: 12px; }
+      .system-section { padding: 16px; }
+      table { font-size: 0.85rem; }
+      #filter-container { top: 10px; padding: 10px; gap: 8px; }
+      .filter-btn { padding: 6px 12px; font-size: 0.8rem; }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>🌸 OSCE Normal Findings & Verbalization Guide</h1>
+  <p>Organized by System | Filterable | Complete Content Preserved</p>
+</header>
+
+<div id="filter-container">
+  <button class="filter-btn active" data-filter="all">All Systems</button>
+  <button class="filter-btn" data-filter="preliminaries">🔹 Preliminaries</button>
+  <button class="filter-btn" data-filter="abdomen">🔹 Abdomen</button>
+  <button class="filter-btn" data-filter="thorax">🔹 Thorax & Chest</button>
+  <button class="filter-btn" data-filter="neuro">🔹 Neurological</button>
+  <button class="filter-btn" data-filter="cardiac">🔹 Cardiac</button>
+  <button class="filter-btn" data-filter="heent">🔹 Head & Neck</button>
+  <button class="filter-btn" data-filter="skin">🔹 Skin</button>
+</div>
+
+<main>
+
+  <!-- PRELIMINARIES -->
+  <section class="system-section" data-system="preliminaries">
+    <h2><span>🌸</span> GENERAL PRELIMINARIES (All Stations)</h2>
+    
+    <div class="sub-heading steps">📝 Detailed Steps</div>
+    <ul class="steps-list">
+      <li>Introduce: "Good Morning Sir/Ma’am, I am [Name], a first year medical student from Bicol University."</li>
+      <li>Language preference: "Are you comfortable with me speaking in English or do you have any preferred language? (Bikol, Filipino,) Need a translator?"</li>
+      <li>Confirm ID: "May I know your name and date of birth? How do you want to be addressed?"</li>
+      <li>Explain and ask for consent: "I will be asking a series of questions/examining your [body part]. Any information that you will share will be kept confidential. Can we start?"</li>
+      <li>Perform hand hygiene before contact.</li>
+      <li>Vital signs: "But first, I'll be taking your vital signs."</li>
+    </ul>
+
+    <div class="sub-heading findings">✅ Normal Findings</div>
+    <table>
+      <tr><th>Parameter</th><th>Normal Finding</th></tr>
+      <tr><td>BP</td><td>120/80 mmHg</td></tr>
+      <tr><td>Temp</td><td>36.1 to 37.2°C</td></tr>
+      <tr><td>Heart rate</td><td>60-100 bpm</td></tr>
+      <tr><td>Respiratory rate</td><td>12-20 cpm</td></tr>
+      <tr><td>O2 sat</td><td>95 to 100%</td></tr>
+      <tr><td>BMI</td><td>18.5- 24.9 kg/m²</td></tr>
+    </table>
+
+    <div class="sub-heading script">🗣️ OSCE Verbalization Scripts</div>
+    <div class="verbal-block">
+"Good Morning Sir/Ma’am, I am __________, a first year medical student from Bicol University. May I know your name and date of birth? How do you want to be addressed? Are you comfortable with me speaking in English? Today I’ll be examining your [body part]. This will include [steps]. Any information that you will share will be kept confidential. Can we start? Before I begin, I will perform hand hygiene. But first, I'll be taking your vital signs. Your BP is 120/80, Temp is 36.1 to 37.2°C, Heart rate is 60-100 bpm, Respiratory rate is 12-20 cpm, O2 sat is 95 to 100%, and BMI is within 18.5-24.9 kg/m² — all within normal limits."
+    </div>
+  </section>
+
+  <!-- ABDOMEN -->
+  <section class="system-section" data-system="abdomen">
+    <h2><span>🌸</span> ABDOMEN (Order: I → Am → Pe → Pa)</h2>
+    <div class="pro-tip">💡 NOTE: “Is there any area of your abdomen that is painful? Can you point it?” Position: Supine (pillow under the neck and knees). Stand on right side of the bed.</div>
+    
+    <div class="sub-heading steps">📝 Detailed PE Steps</div>
+    <ul class="steps-list">
+      <li><strong>Inspection:</strong> Assess skin (color, striae, scar, temp, dilated veins, rashes), umbilicus (inflammation, contour, bulges), contour (flat, flabby, round, protuberant, globular), visible peristalsis, and palpation at epigastrium.</li>
+      <li><strong>Auscultation:</strong> Done first so as not to alter bowel sound. Assess bowel motility using diaphragm. Check frequency and character (5-34/min clicks and gurgles). Listen for borborygmi, bruits (aorta, iliac artery, femoral), friction rubs (liver and spleen). If with HTN: check epigastrium and upper quadrants.</li>
+      <li><strong>Percussion:</strong> Assess for gas across 4 quadrants. Right: liver dullness; left: tympanitic air and splenic flexure of colon. Check for shifting dullness and fluid wave.</li>
+      <li><strong>Palpation (Light):</strong> Gentle dipping motion. Ask patient to exhale, relax, mouth open.</li>
+      <li><strong>Palpation (Deep):</strong> Assess liver edge, kidneys, and abdominal mass.</li>
+      <li><strong>Liver Exam:</strong> Percuss at right midclavicular line (level below umbilicus upward, nipple line downward until dull). Palpate while patient takes a deep breath. Use hooking technique for obese patients.</li>
+      <li><strong>Spleen Exam:</strong> Percuss left lower anterior chest wall (6th rib to ant/mid axillary). Normal: Traube space not obliterated → tympanitic. Check splenic percussion sign (patient takes deep breath → percuss again → tympanitic). Palpate: reach around to support left rib cage, press in toward spleen below left costal margin, ask for deep breath. Repeat with patient lying on right side (flex leg, deep breath).</li>
+      <li><strong>Kidney Exam:</strong> Palpation below 12th rib. Left: go to patient's left side (rarely palpable). Right: go to right side (palpable in thin people). Percussion: if tender, use kidney punch test at CVA (12th rib). Place non-dominant hand, produce firm thud. Repeat other side.</li>
+      <li><strong>Ascites:</strong> Shifting dullness (percuss border of tympany/dullness supine → roll to side → percuss again. Normal: border constant). Fluid wave.</li>
+      <li><strong>Appendicitis:</strong> Ask where pain began & where it is now. Ask to cough to see where pain occurs. Palpate carefully for local tenderness.</li>
+    </ul>
+
+    <div class="sub-heading findings">✅ Normal Findings & Reporting Summary</div>
+    <table>
+      <tr><th>Step</th><th>Normal Finding</th></tr>
+      <tr><td><strong>Inspection</strong></td><td>Skin is brown, no lesions, no scars; symmetric, no localized bulging/swelling; shape flat & umbilicus inverted; no visible peristalsis, no superficial dilated veins, no abnormal pulsations</td></tr>
+      <tr><td><strong>Auscultation</strong></td><td>Normoactive bowel sounds, no bruit heard over epigastrium, right & left paraumbilical areas</td></tr>
+      <tr><td><strong>Percussion</strong></td><td>4 quadrants tympanitic; liver span 6cm & no splenic dullness; no fluid wave, no shifting dullness; no CVA tenderness</td></tr>
+      <tr><td><strong>Palpation</strong></td><td>Light: soft, no palpable superficial mass & tenderness. Deep: no deep mass & tenderness. Liver, spleen, right & left kidneys not palpable.</td></tr>
+    </table>
+
+    <div class="sub-heading script">🗣️ OSCE Verbalization Scripts</div>
+    <div class="verbal-block">
+✅ Inspection:
+"On inspection, the abdomen is flat, symmetric, with no visible scars, striae, dilated veins, or peristalsis. The umbilicus is inverted and without inflammation — all normal findings."
+
+✅ Auscultation:
+"On auscultation using the diaphragm, I hear normoactive bowel sounds, approximately 10-15 clicks and gurgles per minute in all quadrants. No bruits are heard over the aorta, iliac, or femoral areas — normal."
+
+✅ Percussion:
+"On percussion, all four quadrants are tympanitic. Liver span is approximately 6 cm at the right midclavicular line. There is no shifting dullness, no fluid wave, and no CVA tenderness — normal."
+
+✅ Palpation:
+"On light palpation, the abdomen is soft with no superficial masses or tenderness. On deep palpation, no deep masses, and the liver, spleen, and kidneys are not palpable — all within normal limits."
+    </div>
+  </section>
+
+  <!-- THORAX & CHEST -->
+  <section class="system-section" data-system="thorax">
+    <h2><span>🌸</span> THORAX & CHEST</h2>
+    
+    <div class="sub-heading steps">📝 Detailed PE Steps</div>
+    <ul class="steps-list">
+      <li><strong>Posterior Chest (Position: Sitting | Order: I-Pa-Pe-A):</strong>
+        <ul class="steps-list" style="margin-top:4px;">
+          <li>Inspection: Stand midline behind. Assess symmetry (shape & movement), retraction, respiratory movement (quiet, unlabored).</li>
+          <li>Palpation: Assess skin abnormalities (masses, sinus tracts), crepitus (normally none), lung expansion (symmetrical at 10th rib, arms folded, deep breath), tactile fremitus (symmetrical, say "99", ladder approach: 1 tracheal, 4 vesicular).</li>
+          <li>Percussion: Arms on chest. Chest resonant. Diaphragmatic excursion: deep breath & hold, percuss boundary dullness/resonance. Dullness on full inspiration 3-5.5 cm.</li>
+          <li>Auscultation: Ask to cough to clear mucus. Use diaphragm, ladder pattern (one full breath/location). Breathe deeply with mouth open. Vocal resonance ("99"). Normal: soft/low pitched, rustling on inspiration, softer on expiration. I:E ratio 3:1. No wheezing/stridor/crackles.</li>
+        </ul>
+      </li>
+      <li><strong>Anterior Chest (Position: Supine, slightly abducted arms):</strong>
+        <ul class="steps-list" style="margin-top:4px;">
+          <li>Inspection: Symmetry, deformity, muscle retraction, respiratory movement (quiet, unlabored, no accessory muscles). Check for cyanosis, pursed lips, nasal flaring, clubbing (Schamroth window test: normal = diamond present).</li>
+          <li>Palpation: Tenderness, bruising, skin changes, chest expansion, tactile fremitus.</li>
+          <li>Percussion: Ladder pattern.</li>
+          <li>Auscultation: Same ladder pattern, deep breath open mouth.</li>
+        </ul>
+      </li>
+      <li><strong>Breast Female (Timing: 5-7 days post-menses | Order: I-Pa):</strong>
+        <ul class="steps-list" style="margin-top:4px;">
+          <li>Inspection (Sitting): Remove shirt. Assess color, thickening, symmetry, contour, nipple. Raise arms over head, hands on hips, lean forward → check for dimpling/retraction.</li>
+          <li>Palpation (Supine): 3 mins each breast. Small concentric circles, light/medium/deep pressure at each point. Use pads of 2nd-4th fingers. Lateral: roll opposite hip, hand on forehead. Medial: shoulders flat, hand at neck, lift elbow even with shoulder.</li>
+        </ul>
+      </li>
+      <li><strong>Breast Male:</strong> Inspection with palpation (sit). Inspect nipple/areola (no discharge). Palpate areola & tissue for nodules.</li>
+      <li><strong>Axilla:</strong> Inspection: skin of each axilla. Palpation: arm down & relax. Palpate left axilla with right hand (and vice versa).</li>
+    </ul>
+
+    <div class="sub-heading findings">✅ Normal Findings & Reporting Summary</div>
+    <table>
+      <tr><th>Region/Step</th><th>Normal Finding</th></tr>
+      <tr><td><strong>Chest Inspection</strong></td><td>Symmetric shape/movement; no retraction; quiet unlabored breathing; no cyanosis/pursed lips/nasal flaring; Schamroth window: diamond present</td></tr>
+      <tr><td><strong>Chest Palpation</strong></td><td>No crepitus/masses; symmetrical expansion at 10th rib; equal tactile fremitus ("99"); no tenderness/bruising</td></tr>
+      <tr><td><strong>Chest Percussion</strong></td><td>Resonant throughout; diaphragmatic excursion 3-5.5 cm</td></tr>
+      <tr><td><strong>Chest Auscultation</strong></td><td>Vesicular sounds (I:E 3:1); bronchovesicular only at manubrium/upper interscapular; no adventitious sounds; negative bronchophony/egophony/whispered pectoriloquy</td></tr>
+      <tr><td><strong>Breast F/M</strong></td><td>Symmetrical; no dimpling/retraction/swelling/nodules/discharge/ulceration; no palpable mass/lump with concentric circles (light/med/deep)</td></tr>
+      <tr><td><strong>Axilla</strong></td><td>No rash/infection/pigmentation; central nodes soft, small (<1cm), non-tender, mobile; no enlarged nodes</td></tr>
+    </table>
+
+    <div class="sub-heading script">🗣️ OSCE Verbalization Scripts</div>
+    <div class="verbal-block">
+✅ Posterior/Anterior Chest:
+"On inspection, the posterior chest is symmetric in shape and movement, with no retractions. Respirations are quiet and unlabored. On palpation, chest expansion is symmetric at the 10th rib and tactile fremitus is equal bilaterally. Percussion reveals resonant lung fields with 4 cm diaphragmatic excursion. Auscultation shows vesicular breath sounds with a 3:1 I:E ratio, no adventitious sounds, and normal vocal resonance — all within normal limits."
+
+✅ Breast (Female/Male):
+"On inspection with arms raised, hands on hips, and leaning forward, both breasts are symmetric with no dimpling, skin retraction, nipple discharge, or contour abnormalities. On palpation using concentric circles with light, medium, and deep pressure, no masses or tenderness are detected in any quadrant or tail of Spence — normal."
+
+✅ Axilla:
+"Inspection shows normal skin without rash or infection. On palpation, central lymph nodes are soft, small (<1cm), non-tender, and mobile. No enlarged axillary lymph nodes are present — normal."
+    </div>
+  </section>
+
+  <!-- NEUROLOGICAL -->
+  <section class="system-section" data-system="neuro">
+    <h2><span>🌸</span> NEUROLOGICAL EXAMINATION</h2>
+    
+    <div class="sub-heading steps">📝 Detailed PE Steps</div>
+    <ul class="steps-list">
+      <li><strong>Mental Status:</strong> Assess alertness, appropriateness, orientation to PPT. Cognitive: remember 3 words ("apple, penny, table"), language (conversation, commands, reading, writing), arithmetic (3+7), R-L orientation, drawing (circle), gnostic functions (name objects), memory (remote, recent, immediate). Mini-Mental: Orientation to time, registration, naming, reading ("CLOSE YOUR EYES").</li>
+      <li><strong>CN I (Olfactory):</strong> Present familiar non-irritating odors. Close eyes, compress one side, sniff, identify smell.</li>
+      <li><strong>CN II (Optic):</strong> Visual acuity (Snellen/Jaeger), visual fields (both then separate, subtle movements, all quadrants). Ophthalmoscopy: clear media, distinct disc margin, normal AV ratio, no hemorrhages.</li>
+      <li><strong>CN III, IV, VI:</strong> EOMs, pupils, nystagmus. Follow finger H-pattern, convergence, focus. Pupillary reaction (swinging flashlight test direct/consensual).</li>
+      <li><strong>CN V (Trigeminal):</strong> Corneal reflex (look up/away, cotton wisp, avoid lashes). Sensory (tap ophthalmic/maxillary/mandibular). Motor (touch masseter/temporal, clench jaw, pterygoids open/close/lateral).</li>
+      <li><strong>CN VII (Facial):</strong> Motor: raise eyebrows, close eyes tight, show teeth. Sensory: taste anterior 2/3 tongue (sugar solution cotton bud).</li>
+      <li><strong>CN VIII (Vestibulocochlear):</strong> Hearing (rub hair/fingers). Weber test (buzzing sound, which side louder?). Rinne test (BC vs AC, normal 2:1). Romberg test.</li>
+      <li><strong>CN IX, X:</strong> Gag, swallowing, uvula, nasal twang, hoarseness. Say "ah" or yawn. Soft palate rises symmetrically, uvula midline.</li>
+      <li><strong>CN XI (Accessory):</strong> Trapezius (raise shoulders), SCM (turn head against resistance; test opposite side).</li>
+      <li><strong>CN XII (Hypoglossal):</strong> Speech, tongue deviation. Protrude tongue (midline). Say "lalalalala", "mimimi", "kakakaka". Check for slurring.</li>
+      <li><strong>Motor Function:</strong> Strength: Upper (proximal: arms outstretched, distal: grasp). Lower (proximal: walk, rise from chair; distal: tiptoe). Pronator drift: arms extended parallel, eyes closed, maintain ~10s. Grade 0-5 (Normal: 5). Tone: resistance to passive movement (upper/lower limbs), check jerkiness/increased/decreased resistance.</li>
+      <li><strong>Sensory Function:</strong> Crude: touch, pain (pinprick), temp, vibration (tuning fork at bony prominences), joint position sense (close eyes, move finger up/down). Romberg. Cortical: graphesthesia, stereognosis, bilateral simultaneous stimulation, point localization.</li>
+      <li><strong>Reflexes:</strong> DTRs: Biceps (C5-6, observe flexion), Brachioradialis (C6-7, strike 1-2 inches above wrist), Triceps (C6-7, extension), Patellar (L2-4), Ankle Jerk (S1-2, strike Achilles). Plantar: stroke lateral sole to ball. Abdominal: stroke above (T8-10) & below (T10-12) umbilicus → umbilicus moves toward stimulus. Pathologic: check clonus, Hoffman.</li>
+    </ul>
+
+    <div class="sub-heading findings">✅ Normal Findings</div>
+    <table>
+      <tr><th>Component</th><th>Normal Finding</th></tr>
+      <tr><td>Mental Status</td><td>Alert, appropriate, oriented to PPT. Intact memory, language, cognition.</td></tr>
+      <tr><td>CN I</td><td>Perceives & identifies odors bilaterally</td></tr>
+      <tr><td>CN II</td><td>VA 20/20; fields full; sharp discs, normal AV ratio, no hemorrhages</td></tr>
+      <tr><td>CN III, IV, VI</td><td>EOM intact; convergence normal; Pupils EBRTL (2-4mm); no nystagmus/ptosis; (+) direct/indirect reflex</td></tr>
+      <tr><td>CN V</td><td>Pain/light felt equally; (+) corneal reflex; masseters/temporalis contract equally; (-) jaw jerk</td></tr>
+      <tr><td>CN VII</td><td>Symmetrical facial movements; taste intact anterior 2/3 tongue</td></tr>
+      <tr><td>CN VIII</td><td>Hearing normal; Weber midline; Rinne AC>BC (2:1); (-) Romberg</td></tr>
+      <tr><td>CN IX, X</td><td>Uvula midline; soft palate rises symmetrically; (+) gag reflex; no dysphonia/dysarthria</td></tr>
+      <tr><td>CN XI</td><td>Shoulder elevation & head rotation against resistance: strong & symmetric</td></tr>
+      <tr><td>CN XII</td><td>Tongue midline; no atrophy/fasciculations; clear articulation</td></tr>
+      <tr><td>Motor</td><td>5/5 strength; normal tone; no pronator drift; no atrophy/fasciculations</td></tr>
+      <tr><td>Sensory</td><td>Equal pain/light touch; intact vibration/proprioception; negative Romberg; intact cortical functions</td></tr>
+      <tr><td>Reflexes</td><td>(+) abdominal reflex; DTRs 2+ symmetric; (-) Babinski, clonus, Hoffman</td></tr>
+    </table>
+
+    <div class="sub-heading script">🗣️ OSCE Verbalization Scripts</div>
+    <div class="verbal-block">
+✅ Mental Status & CN II-XII:
+"The patient is alert, appropriate, and oriented to person, place, and time. Visual acuity is 20/20 bilaterally with full visual fields. Pupils are equal, round, and briskly reactive to light and accommodation. Extraocular movements are intact in all directions. Facial movements are symmetrical. Hearing is normal with Weber midline and Rinne AC>BC. Uvula is midline with symmetric palatal elevation. Shoulder elevation and head rotation are strong. Tongue protrudes midline without atrophy."
+
+✅ Motor, Sensory, Reflexes:
+"Muscle strength is 5/5 in all extremities with normal tone and no pronator drift. Sensation to light touch, pinprick, and temperature is equal bilaterally. Vibration and joint position sense are intact. Romberg test is negative. Deep tendon reflexes are 2+ and symmetric. Plantar response is flexor bilaterally. No Babinski, clonus, or Hoffman sign — normal neurological exam."
+    </div>
+  </section>
+
+  <!-- CARDIAC -->
+  <section class="system-section" data-system="cardiac">
+    <h2><span>🌸</span> CARDIAC EXAM</h2>
+    
+    <div class="sub-heading steps">📝 Detailed PE Steps</div>
+    <ul class="steps-list">
+      <li><strong>Inspection:</strong> Chest deformities and scars, check for PMI, chest symmetry & shape.</li>
+      <li><strong>Jugular Vein Pressure:</strong> Identify pulsation at highest point of neck (start at 30°). Study waves. Measure JVP (distinguish from carotid, observe undulation). Normal: 6-8 cm H2O. Hepatojugular reflex: apply pressure on liver for 10s, observe rise (>3cm after 15s abnormal).</li>
+      <li><strong>Palpation:</strong> Palpate 2nd right/left interspace, along sternal border, apex. Palpate PMI at 5th ICS, 7-9 cm lateral to midsternal line. Observe diameter, amplitude, duration.</li>
+      <li><strong>Auscultation:</strong> Listen for S1/S2 at 4 areas ("All Pray To Mama"): 1. Aortic (2nd ICS, right parasternal), 2. Pulmonary (2nd ICS, left parasternal), 3. Tricuspid (4th ICS, parasternal), 4. Mitral (5th ICS, midclavicular).</li>
+      <li><strong>Peripheral Components:</strong>
+        <ul class="steps-list" style="margin-top:4px;">
+          <li>Skin: Peripheral (lift hands supine, fingers together, pronate, check temp, cap refill, ears). Central (conjunctiva, open mouth check mucosa/cheeks/tongue, Schamroth's test).</li>
+          <li>Pulses: Examine amplitude, rate, rhythm, symmetry. Radial (10s), both wrists. Brachial, carotid (one at a time). Normal: 2+ (brisk, expected).</li>
+        </ul>
+      </li>
+    </ul>
+
+    <div class="sub-heading findings">✅ Normal Findings & Reporting Summary</div>
+    <table>
+      <tr><th>Component</th><th>Normal Finding</th></tr>
+      <tr><td>Neck Vessels</td><td>Jugular veins not distended; Carotid arteries have strong, regular, equal pulsations, soft wall consistency</td></tr>
+      <tr><td>JVP</td><td>6-8 cm H2O at 30-45°; normal undulation; negative hepatojugular reflex</td></tr>
+      <tr><td>Precordium</td><td>Flat; apex beat at 5th ICS, 1-2 cm medial to LMCL; visible/palpable but normal size/amplitude; no thrust/lift/thrills/palpable sounds</td></tr>
+      <tr><td>Auscultation</td><td>Normal rate/rhythm; normal S1 & S2; no extra heart sounds; no murmurs</td></tr>
+      <tr><td>Peripheral</td><td>Warm, dry skin; cap refill <2s; no cyanosis/pallor; Schamroth diamond present; pulses 2+ symmetric; mucosa pink</td></tr>
+    </table>
+
+    <div class="sub-heading script">🗣️ OSCE Verbalization Scripts</div>
+    <div class="verbal-block">
+✅ Inspection & Palpation:
+"On inspection, the precordium is flat with no visible scars or deformities. The PMI is visible at the 5th ICS, midclavicular line. On palpation, the PMI is located at the 5th ICS, 1-2 cm medial to the left midclavicular line, with normal amplitude and duration. No heaves, lifts, or thrills are palpable. Jugular veins are not distended and carotid pulsations are strong and equal — normal."
+
+✅ Auscultation & Peripheral:
+"On auscultation at the aortic, pulmonic, tricuspid, and mitral areas, S1 and S2 are crisp and normal in intensity. No extra heart sounds or murmurs are heard. Peripheral pulses are 2+ and symmetric. Capillary refill is under 2 seconds. No clubbing, cyanosis, or edema is noted — normal cardiac exam."
+    </div>
+  </section>
+
+  <!-- HEAD & NECK -->
+  <section class="system-section" data-system="heent">
+    <h2><span>🌸</span> HEAD AND NECK PE</h2>
+    
+    <div class="sub-heading steps">📝 Detailed PE Steps</div>
+    <ul class="steps-list">
+      <li>Note signs of syndromic facies, large tumors, skin lesions.</li>
+      <li><strong>Hair:</strong> Loss, distribution, number (pull test, tug).</li>
+      <li><strong>Scalp:</strong> Lesions, indentation, scars.</li>
+      <li><strong>Face:</strong> Color, drooling (Bell's/stroke), expression (close/open eyes, smile, frown), test numbness.</li>
+      <li><strong>Eyes:</strong> Pupillary response, EOM, light touch sensation, sclera/conjunctival color, eyelid lesions, iris dilation/constriction, nystagmus. Test VA, visual fields, direct/consensual reflex, H-pattern, convergence.</li>
+      <li><strong>Ears:</strong> Hearing test (hair/fingers → Rinne/Weber). Lesion, tenderness, palpate mastoid. TM via otoscope.</li>
+      <li><strong>Nose:</strong> Midline, deviated septum, discharge, clogged, check inside for redness. Examine with nasal speculum.</li>
+      <li><strong>Oral Cavity:</strong> Examine (CN IX/X), tooth decay, palpate base of tongue/floor of mouth/tonsils.</li>
+      <li><strong>Neck:</strong> Turn head against resistance. Palpate lymph nodes (1-4). Note any nodes. Palpate thyroid nodules (moves on swallowing vs lymph nodes stay).</li>
+    </ul>
+
+    <div class="sub-heading findings">✅ Normal Findings (HEENT Summary)</div>
+    <table>
+      <tr><th>Region</th><th>Normal Finding</th></tr>
+      <tr><td><strong>Head</strong></td><td>Normocephalic/atraumatic (NC/AT)</td></tr>
+      <tr><td><strong>Face/Hair</strong></td><td>No abnormal facies, lesions, tumors. Hair average texture.</td></tr>
+      <tr><td><strong>Eyes</strong></td><td>VA 20/20 bilaterally. Sclera white, conjunctiva pink. Pupils 4mm → 2mm, equal, round, reactive to light/accommodation. Disc margins sharp; no hemorrhages/exudates/narrowing.</td></tr>
+      <tr><td><strong>Ears</strong></td><td>Acuity good to whispered voice. TMs with good cone of light. Weber midline. AC > BC.</td></tr>
+      <tr><td><strong>Nose</strong></td><td>Nasal mucosa pink, septum midline; no sinus tenderness.</td></tr>
+      <tr><td><strong>Throat/Mouth</strong></td><td>Oral mucosa pink, dentition good, pharynx without exudates.</td></tr>
+      <tr><td><strong>Neck</strong></td><td>Trachea midline. Neck supple; thyroid isthmus palpable, lobes not felt. No cervical lymphadenopathy.</td></tr>
+    </table>
+
+    <div class="sub-heading script">🗣️ OSCE Verbalization Scripts</div>
+    <div class="verbal-block">
+"On inspection and palpation of the head and neck, the skull is normocephalic and atraumatic. Hair has average texture without lesions. Facial symmetry is intact with normal expression. Visual acuity is 20/20 bilaterally with pink conjunctivae and white sclerae. Pupils are 4mm constricting to 2mm, equal, round, and reactive to light and accommodation. Disc margins are sharp with no hemorrhages. Hearing is normal to whispered voice with good cone of light on tympanic membranes. Weber test is midline. Air conduction is greater than bone conduction. Nasal mucosa is pink with a midline septum and no sinus tenderness. Oral mucosa is pink with good dentition and clear pharynx. The neck is supple with trachea midline. The thyroid isthmus is palpable but lobes are not felt. No cervical lymphadenopathy is noted — all within normal limits."
+    </div>
+  </section>
+
+  <!-- SKIN -->
+  <section class="system-section" data-system="skin">
+    <h2><span>🌸</span> SKIN PE</h2>
+    
+    <div class="sub-heading steps">📝 Detailed PE Steps</div>
+    <ul class="steps-list">
+      <li><strong>Prelims:</strong> Request patient to change into gown with opening in back (clothes removed except underwear). Ask if chaperone needed. Hand hygiene, VS.</li>
+      <li><strong>Inspection & Palpation (Systematic Head-to-Toe):</strong>
+        <ul class="steps-list" style="margin-top:4px;">
+          <li>Skin lesions: Number, size, color, shape, texture, primary lesion type (flat/raised), location, configuration, melanoma screening.</li>
+          <li>Regions: Head & neck → Hair & scalp → Shoulder, arms, hands → Chest & abdomen → Thighs & lower legs, feet, toes → Lower back, posterior legs.</li>
+          <li>Test for hair loss.</li>
+        </ul>
+      </li>
+    </ul>
+
+    <div class="sub-heading findings">✅ Normal Findings & Reporting Summary</div>
+    <table>
+      <tr><th>Component</th><th>Normal Finding</th></tr>
+      <tr><td>General</td><td>Skin warm and dry</td></tr>
+      <tr><td>Nails</td><td>Without clubbing or cyanosis; normal capillary refill</td></tr>
+      <tr><td>Lesions/Pigmentation</td><td>Approx. 20 brown, round macules on upper back, chest, arms; symmetric pigmentation; none suspicious for malignancy</td></tr>
+      <tr><td>Other</td><td>No rash, petechiae, or ecchymoses. Normal hair distribution/texture.</td></tr>
+    </table>
+
+    <div class="sub-heading script">🗣️ OSCE Verbalization Scripts</div>
+    <div class="verbal-block">
+"On examination from head to toes, the skin is warm and dry with uniform coloration. Nails show no clubbing or cyanosis, and capillary refill is less than 2 seconds. Approximately 20 brown, round macules are noted on the upper back, chest, and arms, all symmetric in pigmentation with none suspicious for malignancy. No rashes, petechiae, or ecchymoses are observed. Hair distribution and texture are normal. Overall skin examination is within normal limits."
+    </div>
+  </section>
+
+</main>
+
+<div class="pro-tip" style="max-width: 900px; margin: 30px auto;">
+  💡 <strong>Pro Tip for OSCE Verbalization</strong>: Always use the formula: <br>
+  <em>"On [STEP], I observe/feel/hear [FINDING], which is [NORMAL/EXPECTED]."</em><br>
+  State the step first, describe exactly what you assess, and conclude with the normal interpretation. Keep it under 2 sentences per finding. This demonstrates active observation and clinical reasoning.
+</div>
+
+<script>
+  document.addEventListener('DOMContentLoaded', () => {
+    const buttons = document.querySelectorAll('.filter-btn');
+    const sections = document.querySelectorAll('.system-section');
+
+    buttons.forEach(btn => {
+      btn.addEventListener('click', () => {
+        buttons.forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+
+        const filterValue = btn.getAttribute('data-filter');
+
+        sections.forEach(section => {
+          if (filterValue === 'all' || section.getAttribute('data-system') === filterValue) {
+            section.classList.remove('hidden');
+          } else {
+            section.classList.add('hidden');
+          }
+        });
+      });
+    });
+  });
+</script>
+
+</body>
+</html>
